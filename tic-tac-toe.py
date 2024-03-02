@@ -55,36 +55,42 @@ def main():
 
         while True:
             print_board(board)
-            try:
-                row = int(input(f"Player {player}, choose a row (1, 2, 3): ")) - 1
-                col = int(input(f"Player {player}, choose a column (1, 2, 3): ")) - 1
+            if 'DYNO' in os.environ:
+                # No Heroku, evitamos a entrada do usuário
+                row = 0
+                col = 0
+            else:
+                try:
+                    row = int(input(f"Player {player}, choose a row (1, 2, 3): ")) - 1
+                    col = int(input(f"Player {player}, choose a column (1, 2, 3): ")) - 1
 
-                if row < 0 or row > 2 or col < 0 or col > 2:
-                    print("Invalid row or column. Please choose again.")
+                    if row < 0 or row > 2 or col < 0 or col > 2:
+                        print("Invalid row or column. Please choose again.")
+                        continue
+
+                    if board[row][col] == ' ':
+                        board[row][col] = player
+                    else:
+                        print("This position is already taken. Try again.")
+                        continue
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
                     continue
 
-                if board[row][col] == ' ':
-                    board[row][col] = player
-                else:
-                    print("This position is already taken. Try again.")
-                    continue
+            winner = check_winner(board)
+            if winner:
+                print_board(board)
+                print(f"Congratulations! Player {winner} wins!")
+                break
 
-                winner = check_winner(board)
-                if winner:
-                    print_board(board)
-                    print(f"Congratulations! Player {winner} wins!")
-                    break
+            if is_full(board):
+                print_board(board)
+                print("Draw!")
+                break
 
-                if is_full(board):
-                    print_board(board)
-                    print("Draw!")
-                    break
+            player = 'O' if player == 'X' else 'X'
 
-                player = 'O' if player == 'X' else 'X'
-            except ValueError:
-                print("Invalid input. Please enter a valid number.")
-
-        restart = input("Pressione a tecla de espaço + Enter para jogar novamente ou qualquer outra + Enter tecla para sair: ")
+        restart = input("Pressione a tecla de espaço para jogar novamente ou qualquer outra tecla para sair: ")
         if restart != ' ':
             print("Encerrando o jogo...")
             break
