@@ -1,4 +1,4 @@
-import sys
+import os
 
 def print_board(board):
     """
@@ -58,8 +58,10 @@ def main():
                 break
 
             print(f"Player {player}'s turn.")
-            row = int(input("Choose a row (1, 2, 3): ")) - 1
-            col = int(input("Choose a column (1, 2, 3): ")) - 1
+            
+            # Obtém o movimento do jogador a partir de uma variável de ambiente
+            row = int(os.getenv('ROW', input("Choose a row (1, 2, 3): "))) - 1
+            col = int(os.getenv('COL', input("Choose a column (1, 2, 3): "))) - 1
 
             if row < 0 or row > 2 or col < 0 or col > 2:
                 print("Invalid row or column. Please choose again.")
