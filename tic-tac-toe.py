@@ -1,84 +1,46 @@
-def print_board(board):
+import random
+
+def choose_word():
     """
-    Imprime o tabuleiro do jogo.
+    Escolhe uma palavra aleatória para o jogo.
     """
-    for row in board:
-        print(" | ".join(row))
-        print("-" * 5)
+    words = ["python", "banana", "computador", "elefante", "girafa", "programação"]
+    return random.choice(words)
 
-def check_winner(board):
+def display_word(word, guessed_letters):
     """
-    Verifica se há um vencedor no jogo.
-    Retorna 'X' se o jogador X venceu, 'O' se o jogador O venceu,
-    ou None se não houver vencedor.
+    Exibe a palavra com letras não adivinhadas substituídas por '_'.
     """
-    # Verifica linhas
-    for row in board:
-        if len(set(row)) == 1 and row[0] != ' ':
-            return row[0]
+    return ' '.join([letter if letter in guessed_letters else '_' for letter in word])
 
-    # Verifica colunas
-    for col in range(3):
-        if board[0][col] == board[1][col] == board[2][col] and board[0][col] != ' ':
-            return board[0][col]
-
-    # Verifica diagonais
-    if board[0][0] == board[1][1] == board[2][2] and board[0][0] != ' ':
-        return board[0][0]
-    if board[0][2] == board[1][1] == board[2][0] and board[0][2] != ' ':
-        return board[0][2]
-
-    return None
-
-def is_full(board):
+def hangman():
     """
-    Verifica se o tabuleiro está cheio (empate).
+    Função principal para o jogo da Forca.
     """
-    for row in board:
-        if ' ' in row:
-            return False
-    return True
+    print("Bem-vindo ao jogo da Forca!")
+    word = choose_word()
+    guessed_letters = set()
+    attempts = 6
 
-def main():
-    """
-    Função principal do jogo.
-    """
-    print("Pressione Enter para iniciar o Jogo da Velha...")
-    input()  # Aguarda o usuário pressionar Enter
+    while attempts > 0:
+        print("\nPalavra:", display_word(word, guessed_letters))
+        guess = input("Tente adivinhar uma letra: ").lower()
 
-    board = [[' ' for _ in range(3)] for _ in range(3)]
-    player = 'X'
-
-    while True:
-        print_board(board)
-        try:
-            row = int(input(f"Player {player}, choose a row (1, 2, 3): ")) - 1
-            col = int(input(f"Player {player}, choose a column (1, 2, 3): ")) - 1
-
-            if row < 0 or row > 2 or col < 0 or col > 2:
-                print("Invalid row or column. Please choose again.")
-                continue
-
-            if board[row][col] == ' ':
-                board[row][col] = player
-            else:
-                print("This position is already taken. Try again.")
-                continue
-
-            winner = check_winner(board)
-            if winner:
-                print_board(board)
-                print(f"Congratulations! Player {winner} wins!")
+        if guess in guessed_letters:
+            print("Você já tentou essa letra.")
+        elif guess in word:
+            print("Letra correta!")
+            guessed_letters.add(guess)
+            if set(word) == guessed_letters:
+                print("Parabéns! Você ganhou!")
                 break
-
-            if is_full(board):
-                print_board(board)
-                print("Draw!")
-                break
-
-            player = 'O' if player == 'X' else 'X'
-        except ValueError:
-            print("Invalid input. Please enter a valid number.")
+        else:
+            print("Letra errada.")
+            attempts -= 1
+            print("Tentativas restantes:", attempts)
+        
+    else:
+        print("Você perdeu! A palavra era:", word)
 
 if __name__ == "__main__":
-    main()
+    hangman()
