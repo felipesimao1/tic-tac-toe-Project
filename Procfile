@@ -1,1 +1,1 @@
-web: python tic_tac_toe.py
+web: python tic-tac-toe.py
