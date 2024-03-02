@@ -46,8 +46,10 @@ def main():
     board = [[' ' for _ in range(3)] for _ in range(3)]
     player = 'X'
 
+    print("Bem-vindo ao Jogo da Velha!")
+    print_board(board)
+
     while True:
-        print_board(board)
         try:
             row = int(input(f"Player {player}, choose a row (1, 2, 3): ")) - 1
             col = int(input(f"Player {player}, choose a column (1, 2, 3): ")) - 1
@@ -62,14 +64,14 @@ def main():
                 print("This position is already taken. Try again.")
                 continue
 
+            print_board(board)
+            
             winner = check_winner(board)
             if winner:
-                print_board(board)
                 print(f"Congratulations! Player {winner} wins!")
                 break
 
             if is_full(board):
-                print_board(board)
                 print("Draw!")
                 break
 
