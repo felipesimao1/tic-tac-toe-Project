@@ -1,4 +1,5 @@
 import os
+import sys
 
 def print_board(board):
     """
@@ -45,44 +46,48 @@ def main():
     """
     Função principal do jogo.
     """
-    board = [[' ' for _ in range(3)] for _ in range(3)]
-    player = 'X'
-
-    print("Bem-vindo ao Jogo da Velha!")
-    print_board(board)
-
     while True:
-        try:
-            if is_full(board):
-                print("Empate!")
-                break
+        board = [[' ' for _ in range(3)] for _ in range(3)]
+        player = 'X'
 
-            print(f"Player {player}'s turn.")
-            
-            # Obtém o movimento do jogador a partir de uma variável de ambiente
-            row = int(os.getenv('ROW', input("Choose a row (1, 2, 3): "))) - 1
-            col = int(os.getenv('COL', input("Choose a column (1, 2, 3): "))) - 1
+        os.system('clear')  # Limpa a tela do terminal (funciona no Unix/Linux/Mac)
+        print("Bem-vindo ao Jogo da Velha!")
 
-            if row < 0 or row > 2 or col < 0 or col > 2:
-                print("Invalid row or column. Please choose again.")
-                continue
-
-            if board[row][col] == ' ':
-                board[row][col] = player
-            else:
-                print("This position is already taken. Try again.")
-                continue
-
+        while True:
             print_board(board)
-            
-            winner = check_winner(board)
-            if winner:
-                print(f"Congratulations! Player {winner} wins!")
-                break
+            try:
+                row = int(input(f"Player {player}, choose a row (1, 2, 3): ")) - 1
+                col = int(input(f"Player {player}, choose a column (1, 2, 3): ")) - 1
 
-            player = 'O' if player == 'X' else 'X'
-        except ValueError:
-            print("Invalid input. Please enter a valid number.")
+                if row < 0 or row > 2 or col < 0 or col > 2:
+                    print("Invalid row or column. Please choose again.")
+                    continue
+
+                if board[row][col] == ' ':
+                    board[row][col] = player
+                else:
+                    print("This position is already taken. Try again.")
+                    continue
+
+                winner = check_winner(board)
+                if winner:
+                    print_board(board)
+                    print(f"Congratulations! Player {winner} wins!")
+                    break
+
+                if is_full(board):
+                    print_board(board)
+                    print("Draw!")
+                    break
+
+                player = 'O' if player == 'X' else 'X'
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+
+        restart = input("Pressione a tecla de espaço + Enter para jogar novamente ou qualquer outra + Enter tecla para sair: ")
+        if restart != ' ':
+            print("Encerrando o jogo...")
+            break
 
 if __name__ == "__main__":
     main()
