@@ -1,3 +1,5 @@
+import sys
+
 def print_board(board):
     """
     Imprime o tabuleiro do jogo.
@@ -51,8 +53,13 @@ def main():
 
     while True:
         try:
-            row = int(input(f"Player {player}, choose a row (1, 2, 3): ")) - 1
-            col = int(input(f"Player {player}, choose a column (1, 2, 3): ")) - 1
+            if is_full(board):
+                print("Empate!")
+                break
+
+            print(f"Player {player}'s turn.")
+            row = int(input("Choose a row (1, 2, 3): ")) - 1
+            col = int(input("Choose a column (1, 2, 3): ")) - 1
 
             if row < 0 or row > 2 or col < 0 or col > 2:
                 print("Invalid row or column. Please choose again.")
@@ -69,10 +76,6 @@ def main():
             winner = check_winner(board)
             if winner:
                 print(f"Congratulations! Player {winner} wins!")
-                break
-
-            if is_full(board):
-                print("Draw!")
                 break
 
             player = 'O' if player == 'X' else 'X'
