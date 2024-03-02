@@ -1,1 +1,1 @@
-web: python tic-tac-toe.py
+web: node index.js
