@@ -45,54 +45,52 @@ def main():
     """
     Função principal do jogo.
     """
+    input("Pressione Enter para iniciar o Jogo da Velha...")
+    os.system('cls' if os.name == 'nt' else 'clear')
+
     while True:
         board = [[' ' for _ in range(3)] for _ in range(3)]
         player = 'X'
 
-        os.system('clear')  # Limpa a tela do terminal (funciona no Unix/Linux/Mac)
-        print("Bem-vindo ao Jogo da Velha!")
+        print("\nBem-vindo ao Jogo da Velha!")
+        print_board(board)
 
         while True:
-            print_board(board)
-            if 'DYNO' in os.environ:
-                # No Heroku, evitamos a entrada do usuário
-                row = 0
-                col = 0
-            else:
-                try:
-                    row = int(input(f"Player {player}, choose a row (1, 2, 3): ")) - 1
-                    col = int(input(f"Player {player}, choose a column (1, 2, 3): ")) - 1
+            try:
+                row = int(input(f"Player {player}, escolha uma linha (1, 2, 3): ")) - 1
+                col = int(input(f"Player {player}, escolha uma coluna (1, 2, 3): ")) - 1
 
-                    if row < 0 or row > 2 or col < 0 or col > 2:
-                        print("Invalid row or column. Please choose again.")
-                        continue
-
-                    if board[row][col] == ' ':
-                        board[row][col] = player
-                    else:
-                        print("This position is already taken. Try again.")
-                        continue
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
+                if row < 0 or row > 2 or col < 0 or col > 2:
+                    print("Linha ou coluna inválida. Por favor, escolha novamente.")
                     continue
 
-            winner = check_winner(board)
-            if winner:
+                if board[row][col] == ' ':
+                    board[row][col] = player
+                else:
+                    print("Esta posição já foi escolhida. Tente novamente.")
+                    continue
+
+                winner = check_winner(board)
+                if winner:
+                    print_board(board)
+                    print(f"Parabéns! O jogador {winner} venceu!")
+                    break
+
+                if is_full(board):
+                    print_board(board)
+                    print("Empate!")
+                    break
+
+                player = 'O' if player == 'X' else 'X'
                 print_board(board)
-                print(f"Congratulations! Player {winner} wins!")
-                break
+            except ValueError:
+                print("Entrada inválida. Por favor, digite um número válido.")
 
-            if is_full(board):
-                print_board(board)
-                print("Draw!")
-                break
-
-            player = 'O' if player == 'X' else 'X'
-
-        restart = input("Pressione a tecla de espaço para jogar novamente ou qualquer outra tecla para sair: ")
+        restart = input("Pressione a tecla de espaço para reiniciar o jogo, ou qualquer outra tecla para sair: ")
         if restart != ' ':
-            print("Encerrando o jogo...")
             break
+        else:
+            os.system('cls' if os.name == 'nt' else 'clear')
 
 if __name__ == "__main__":
     main()
