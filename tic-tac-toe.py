@@ -1,5 +1,4 @@
 import os
-import sys
 
 def print_board(board):
     """
